@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from rag_pipeline.rag_service import init_rag, get_rag_status
-from routers import chat, radar, factcheck
+from routers import chat, radar, factcheck, upload, dashboard, landing
 
 logging.basicConfig(
     level=logging.INFO,
@@ -61,10 +61,14 @@ app.include_router(chat.router, prefix="/api", tags=["chat"])
 app.include_router(radar.router, prefix="/api", tags=["radar"])
 app.include_router(factcheck.router, prefix="/api", tags=["factcheck"])
 
+# Mount Phase 2 routers
+app.include_router(upload.router, prefix="/api", tags=["upload"])
+app.include_router(dashboard.router, prefix="/api", tags=["dashboard"])
+app.include_router(landing.router, prefix="/api", tags=["landing"])
 
 @app.get("/")
 async def root():
-    return {"message": "MarketMind AI is running", "status": "ok", "phase": "1"}
+    return {"message": "MarketMind AI is running", "status": "ok", "phase": "2"}
 
 
 @app.get("/health")
@@ -73,5 +77,9 @@ async def health():
     return {
         "status": "healthy" if status["initialized"] else "degraded",
         "rag": status,
-        "phase": "1 (core features)"
+        "phase": "2 (all features)",
+        "endpoints": {
+            "core": ["chat", "radar", "factcheck"],
+            "additional": ["upload-url", "dashboard/summary", "landing/data"]
+        }
     }
