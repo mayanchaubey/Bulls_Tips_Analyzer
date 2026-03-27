@@ -17,7 +17,7 @@ MarketMind AI — Stage 3: RAG Service (Optimized)
 """
 
 import os
-os.environ["HF_HOME"] = r"D:\marketmind\hf_cache"
+os.environ["HF_HOME"] = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hf_cache")
 
 import logging
 import time

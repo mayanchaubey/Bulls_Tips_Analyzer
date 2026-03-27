@@ -1,0 +1,12 @@
+﻿9e348ac HEAD@{0}: pull origin main: Merge made by the 'ort' strategy.
+2e31199 HEAD@{1}: commit: fix: allow all CORS origins
+e1b1dff HEAD@{2}: commit (merge): Merge branch 'main' of https://github.com/mayanchaubey/Bulls_Tips_Analyzer
+cba249d HEAD@{3}: pull --rebase origin main (finish): returning to refs/heads/main
+cba249d HEAD@{4}: pull --rebase origin main (pick): feat: implement phase 2 dashboard, landing, and upload endpoints
+5e49299 HEAD@{5}: pull --rebase origin main (start): checkout 5e49299b335fca5239c4a753b13872bfbda803a3
+4cd1436 HEAD@{6}: commit: feat: implement phase 2 dashboard, landing, and upload endpoints
+1a932f3 HEAD@{7}: pull --rebase origin main (finish): returning to refs/heads/main
+1a932f3 HEAD@{8}: pull --rebase origin main (start): checkout 1a932f3aad8ad8be49e272de0f2f6288559e7c96
+4622814 HEAD@{9}: commit (amend): feat: integrate RAG service and add routing APIs for core features
+1a932f3 HEAD@{10}: commit: push local changes
+6814ec0 HEAD@{11}: clone: from https://github.com/mayanchaubey/Bulls_Tips_Analyzer.git

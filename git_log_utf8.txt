@@ -1,0 +1,10 @@
+﻿9e348ac Merge branch 'main' of https://github.com/mayanchaubey/Bulls_Tips_Analyzer
+2e31199 fix: allow all CORS origins
+aef161c Updated landing page UI
+e1b1dff Merge branch 'main' of https://github.com/mayanchaubey/Bulls_Tips_Analyzer
+5c683e2 Stable version: integrated frontend + backend (factcheck disabled, UI refined)
+cba249d feat: implement phase 2 dashboard, landing, and upload endpoints
+5e49299 Create README.md
+1a932f3 push local changes
+6814ec0 feat: RAG pipeline Stage 1 and Stage 2 complete
+9b3f7e0 Initial commit
