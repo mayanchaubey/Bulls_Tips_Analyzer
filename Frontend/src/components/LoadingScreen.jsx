@@ -8,31 +8,41 @@ const TICKER_DATA = [
 ];
 
 const RINGS = [
-  { radius: 56, duration: 20, size: 4 },
-  { radius: 80, duration: 24, size: 3 },
-  { radius: 104, duration: 28, size: 3 },
-  { radius: 128, duration: 32, size: 2 },
+  { radius: 56, duration: 20, size: 4, color: '#C1121F' },
+  { radius: 80, duration: 24, size: 3, color: '#F59E0B' },
+  { radius: 104, duration: 28, size: 3, color: '#10B981' },
+  { radius: 128, duration: 32, size: 2, color: '#6366F1' },
 ];
 
 export const LoadingScreen = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    let current = 0;
+    const duration = 4000;
+    let frameId;
+    let completionTimeout;
+    const start = performance.now();
 
-    const timer = setInterval(() => {
-      current += 8;
-      setProgress(current);
+    const tick = (now) => {
+      const elapsed = now - start;
+      const progressValue = Math.min(100, (elapsed / duration) * 100);
+      setProgress(Math.round(progressValue));
 
-      if (current >= 100) {
-        clearInterval(timer);
-        setTimeout(() => {
+      if (elapsed < duration) {
+        frameId = requestAnimationFrame(tick);
+      } else {
+        completionTimeout = window.setTimeout(() => {
           onComplete?.();
         }, 400);
       }
-    }, 100);
+    };
 
-    return () => clearInterval(timer);
+    frameId = requestAnimationFrame(tick);
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      if (completionTimeout) clearTimeout(completionTimeout);
+    };
   }, [onComplete]);
 
   return (
@@ -69,12 +79,12 @@ export const LoadingScreen = ({ onComplete }) => {
           {/* Globe */}
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
             className="relative w-24 h-24 rounded-full border flex items-center justify-center"
             style={{
-              background: 'radial-gradient(circle at 30% 30%, #fff5f5 0%, #ffffff 70%)',
-              border: '1px solid #E5E7EB',
-boxShadow: 'inset 0 0 10px rgba(193,18,31,0.05)',
+              background: 'radial-gradient(circle at 30% 30%, #C1121F 0%, #6F0F14 70%)',
+              border: '1px solid rgba(255, 255, 255, 0.35)',
+              boxShadow: 'inset 0 0 25px rgba(193, 18, 31, 0.8)',
             }}
           >
             <svg
@@ -160,9 +170,9 @@ const OrbitingNode = ({ ring }) => {
       <div
         className="absolute rounded-full"
         style={{
-          width: ring.size,
-          height: ring.size,
-          background: '#C1121F',
+              width: ring.size,
+              height: ring.size,
+              background: ring.color,
           top: 0,
           left: '50%',
           transform: 'translateX(-50%)',
