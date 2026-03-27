@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text-primary: #111111;
+  --color-text-secondary: #6b7280;
+  --color-accent: #c1121f;
+  --color-shadow: rgba(17, 17, 17, 0.05);
+  --font-regular: 400;
+  --font-strong: 600;
+}
+
+@layer base {
+  body {
+    @apply bg-[#ffffff] text-text-primary font-sans antialiased;
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text-primary);
+    line-height: 1.2;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section-frame {
+    padding: 32px 0;
+  }
+
+  .card-surface {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 12px 32px var(--color-shadow);
+    border-radius: 12px;
+  }
+
+  .flat-btn {
+    background: var(--color-accent);
+    color: #ffffff;
+    border-radius: 10px;
+    border: none;
+    box-shadow: none;
+  }
+}

@@ -272,6 +272,7 @@ def init_rag():
         raise
 
 
+
 def generate_answer(
     query: str, 
     mode: str = "chat",

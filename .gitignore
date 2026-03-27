@@ -11,3 +11,6 @@ data/
 venv/
 *.log
 *.json
+node_modules/
+build/
+dist/

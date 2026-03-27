@@ -1,67 +1,35 @@
-"""
-MarketMind AI — Upload Router
-POST /api/upload-url — Generate S3 pre-signed URLs (MOCKED for MVP)
-"""
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import List
-import hashlib
-import time
+import boto3
+import os
+from fastapi import APIRouter
 
 router = APIRouter()
 
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+    region_name=os.getenv("AWS_REGION"),
+)
 
-class FileUploadRequest(BaseModel):
-    fileName: str
-    fileType: str
+@router.post("/upload-url")
+def get_upload_url(fileName: str, fileType: str):
+    bucket = os.getenv("AWS_BUCKET_NAME")
 
+    key = f"uploads/{fileName}"
 
-class FileUploadResponse(BaseModel):
-    uploadUrl: str
-    fileUrl: str
-
-
-@router.post("/upload-url", response_model=FileUploadResponse)
-async def generate_upload_url(request: FileUploadRequest):
-    """
-    Generate pre-signed S3 upload URL (MOCKED for MVP).
-    In production, this would use boto3 to generate real S3 URLs.
-    For hackathon, we return fake URLs that frontend can use for UI testing.
-    """
-    if not request.fileName or not request.fileType:
-        raise HTTPException(status_code=400, detail="fileName and fileType are required")
-    
-    # Validate file type
-    allowed_types = [
-        "application/pdf",
-        "image/jpeg", 
-        "image/png",
-        "image/jpg",
-        "text/csv",
-        "application/vnd.ms-excel"
-    ]
-    
-    if request.fileType not in allowed_types:
-        raise HTTPException(
-            status_code=400, 
-            detail=f"File type {request.fileType} not allowed. Supported: PDF, JPEG, PNG, CSV"
-        )
-    
-    # Generate fake but deterministic URLs
-    file_hash = hashlib.md5(f"{request.fileName}{time.time()}".encode()).hexdigest()
-    
-    # Fake S3 bucket structure
-    fake_upload_url = (
-        f"https://marketmind-uploads.s3.ap-south-1.amazonaws.com/"
-        f"temp/{file_hash}/{request.fileName}?X-Amz-Algorithm=AWS4-HMAC-SHA256"
+    upload_url = s3.generate_presigned_url(
+        "put_object",
+        Params={
+            "Bucket": bucket,
+            "Key": key,
+            "ContentType": fileType,
+        },
+        ExpiresIn=3600,
     )
-    
-    fake_file_url = (
-        f"https://marketmind-uploads.s3.ap-south-1.amazonaws.com/"
-        f"uploads/{file_hash}/{request.fileName}"
-    )
-    
-    return FileUploadResponse(
-        uploadUrl=fake_upload_url,
-        fileUrl=fake_file_url
-    )
+
+    file_url = f"https://{bucket}.s3.amazonaws.com/{key}"
+
+    return {
+        "uploadUrl": upload_url,
+        "fileUrl": file_url,
+    }

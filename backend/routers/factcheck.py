@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 MarketMind AI — Finfluencer Fact-Checker Router
 POST /api/factcheck — verifies YouTube video claims
@@ -13,6 +14,15 @@ from rag_pipeline.stage1_ingestion.ingestion import load_youtube_transcript
 from rag_pipeline.stage1_ingestion.preprocessing import run_cleaning
 
 router = APIRouter()
+=======
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import List, Dict
+import logging
+
+router = APIRouter()
+logger = logging.getLogger(__name__)
+>>>>>>> 5c683e248a36afd2ac4077d7764334e114569a52
 
 
 class FactCheckRequest(BaseModel):
@@ -31,6 +41,7 @@ class FactCheckResponse(BaseModel):
     summary: Dict[str, int]
 
 
+<<<<<<< HEAD
 def extract_claims_from_answer(answer: str) -> List[Claim]:
     """
     Parse LLM factcheck answer into structured claims.
@@ -126,4 +137,35 @@ async def factcheck(request: FactCheckRequest):
     return FactCheckResponse(
         claims=claims,
         summary=summary
+=======
+@router.post("/factcheck", response_model=FactCheckResponse)
+async def factcheck(request: FactCheckRequest):
+    url = request.youtube_url.strip()
+
+    # ✅ Basic validation
+    if not url or ("youtube.com" not in url and "youtu.be" not in url):
+        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+
+    # ✅ Log fallback mode
+    logger.warning("FactCheck fallback mode active - pipeline disabled")
+
+    # ✅ Fallback response
+    fallback_claim = Claim(
+        claim="Fact-checking temporarily unavailable",
+        verdict="unverifiable",
+        explanation="FactCheck system is being upgraded. Please try again later.",
+        source="MarketMind System"
+    )
+
+    fallback_summary = {
+        "verified": 0,
+        "misleading": 0,
+        "false": 0,
+        "unverifiable": 1
+    }
+
+    return FactCheckResponse(
+        claims=[fallback_claim],
+        summary=fallback_summary
+>>>>>>> 5c683e248a36afd2ac4077d7764334e114569a52
     )
