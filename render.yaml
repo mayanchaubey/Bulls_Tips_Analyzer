@@ -1,0 +1,35 @@
+services:
+  # Backend: FastAPI Web Service
+  - type: web
+    name: bullstips-backend
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn backend.main:app -k uvicorn.workers.UvicornWorker --chdir backend
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: GROQ_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_ENVIRONMENT
+        sync: false
+      - key: PINECONE_INDEX_NAME
+        sync: false
+      - key: HUGGINGFACE_TOKEN
+        sync: false
+
+  # Frontend: React Vite Static Site
+  - type: static
+    name: bullstips-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    publishPath: ./Frontend/dist
+    buildCommandContext: ./Frontend
+    envVars:
+      - key: VITE_FACTCHECK_ENDPOINT
+        fromService:
+          name: bullstips-backend
+          type: web
+          property: host
+        suffix: /api/factcheck
